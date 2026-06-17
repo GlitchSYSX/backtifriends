@@ -8,290 +8,162 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;500;600;700&display=swap');
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root { --rose: #e8637a; --cream: #fff8f5; --text: #5a3030; }
+body { min-height: 100vh; font-family: 'Nunito', sans-serif; overflow: hidden; }
 
-:root {
-  --rose: #e8637a;
-  --cream: #fff8f5;
-  --text: #5a3030;
-}
-
-body {
-  min-height: 100vh;
-  font-family: 'Nunito', sans-serif;
-  overflow: hidden;
-}
-
-/* ===== PAGES ===== */
 .page {
-  position: fixed;
-  inset: 0;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.6s ease;
+  position: fixed; inset: 0;
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.6s ease;
 }
 .page.active { display: flex; opacity: 1; }
 .page.fade-out { opacity: 0; pointer-events: none; }
 
-/* ===== PAGE 1 — PIN ===== */
-#page-pin {
+/* ===== PAGE 1 — QUESTION ===== */
+#page-question {
   background: linear-gradient(160deg, #fce4dc 0%, #f2b5a0 50%, #e8937a 100%);
+  overflow: hidden;
 }
-
-.pin-top {
+.confetti-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+.question-content {
+  position: relative; z-index: 5;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 32px;
+  padding: 20px;
+}
+.question-text {
+  font-family: 'Nunito', sans-serif;
+  font-size: 2rem; font-weight: 700;
+  color: white;
   text-align: center;
-  margin-bottom: 36px;
+  text-shadow: 0 2px 12px rgba(180,60,60,0.2);
+  line-height: 1.3;
 }
-.pin-top .small {
-  font-family: 'Nunito', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: rgba(255,255,255,0.9);
-  margin-bottom: 8px;
-}
-.pin-top .name {
-  font-family: 'Dancing Script', cursive;
-  font-size: 3.2rem;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 20px rgba(200,80,80,0.3);
-  line-height: 1;
-}
-
-.pin-dots {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  margin-bottom: 32px;
-}
-.pin-dot {
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.7);
-  background: transparent;
-  transition: background 0.2s, transform 0.15s;
-}
-.pin-dot.filled {
-  background: white;
-  transform: scale(1.15);
-}
-
-.pin-keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 72px);
-  gap: 14px;
-}
-.key {
-  width: 72px; height: 72px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.6);
-  background: rgba(255,255,255,0.15);
-  color: white;
-  font-size: 1.4rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  backdrop-filter: blur(4px);
-  transition: background 0.15s, transform 0.1s;
-  user-select: none;
-}
-.key:active { background: rgba(255,255,255,0.35); transform: scale(0.92); }
-.key.clear { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.03em; }
-.key.empty { border: none; background: transparent; cursor: default; pointer-events: none; }
-
-.pin-error {
-  margin-top: 20px;
-  color: white;
-  font-size: 0.9rem;
-  font-weight: 600;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.pin-error.show { opacity: 1; }
-
-/* ===== PAGE 2 — LETTER ===== */
-#page-letter {
-  background: linear-gradient(160deg, #fce4dc 0%, #f2b5a0 50%, #e8937a 100%);
-  padding: 24px;
-  overflow-y: auto;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 40px;
-}
-
-.letter-card {
-  background: var(--cream);
-  border-radius: 24px;
-  padding: 32px 24px 24px;
-  max-width: 420px;
-  width: 100%;
-  box-shadow: 0 8px 40px rgba(180,80,80,0.15);
-}
-
-.letter-greeting {
-  font-family: 'Dancing Script', cursive;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--text);
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.letter-body {
-  font-family: 'Nunito', sans-serif;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text);
-  line-height: 1.85;
-  text-align: left;
-}
-
-.next-btn {
-  display: block;
-  margin: 24px auto 0;
-  padding: 13px 44px;
+.btn-yes {
+  padding: 16px 52px;
   background: var(--rose);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
+  color: white; border: none; border-radius: 50px;
+  font-size: 1.1rem; font-family: 'Nunito', sans-serif; font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 20px rgba(232,99,122,0.4);
   transition: transform 0.2s, box-shadow 0.2s;
 }
+.btn-yes:active { transform: scale(0.95); }
+.btn-no {
+  padding: 12px 36px;
+  background: rgba(255,255,255,0.25);
+  color: white; border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 50px;
+  font-size: 1rem; font-family: 'Nunito', sans-serif; font-weight: 600;
+  cursor: pointer;
+  position: fixed;
+  transition: none;
+}
+
+/* ===== PAGE 2 — PIN ===== */
+#page-pin {
+  background: linear-gradient(160deg, #fce4dc 0%, #f2b5a0 50%, #e8937a 100%);
+}
+.pin-top { text-align: center; margin-bottom: 36px; }
+.pin-top .small {
+  font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 500;
+  color: rgba(255,255,255,0.9); margin-bottom: 8px;
+}
+.pin-top .name {
+  font-family: 'Dancing Script', cursive; font-size: 3.2rem; font-weight: 700;
+  color: white; text-shadow: 0 2px 20px rgba(200,80,80,0.3); line-height: 1;
+}
+.pin-dots { display: flex; gap: 14px; justify-content: center; margin-bottom: 32px; }
+.pin-dot {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.7); background: transparent;
+  transition: background 0.2s, transform 0.15s;
+}
+.pin-dot.filled { background: white; transform: scale(1.15); }
+.pin-keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 14px; }
+.key {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.15); color: white;
+  font-size: 1.4rem; font-family: 'Nunito', sans-serif; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px); transition: background 0.15s, transform 0.1s;
+  user-select: none;
+}
+.key:active { background: rgba(255,255,255,0.35); transform: scale(0.92); }
+.key.clear { font-size: 0.9rem; }
+.key.empty { border: none; background: transparent; cursor: default; pointer-events: none; }
+.pin-error { margin-top: 20px; color: white; font-size: 0.9rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; }
+.pin-error.show { opacity: 1; }
+
+/* ===== PAGE 3 — LETTER ===== */
+#page-letter {
+  background: linear-gradient(160deg, #fce4dc 0%, #f2b5a0 50%, #e8937a 100%);
+  padding: 24px; overflow-y: auto;
+  align-items: center; justify-content: flex-start; padding-top: 40px;
+}
+.letter-card {
+  background: var(--cream); border-radius: 24px;
+  padding: 32px 24px 24px; max-width: 420px; width: 100%;
+  box-shadow: 0 8px 40px rgba(180,80,80,0.15);
+}
+.letter-greeting {
+  font-family: 'Dancing Script', cursive; font-size: 1.8rem; font-weight: 700;
+  color: var(--text); text-align: center; margin-bottom: 16px;
+}
+.letter-body {
+  font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 500;
+  color: var(--text); line-height: 1.85; text-align: left;
+}
+.next-btn {
+  display: block; margin: 24px auto 0; padding: 13px 44px;
+  background: var(--rose); color: white; border: none; border-radius: 50px;
+  font-size: 1rem; font-family: 'Nunito', sans-serif; font-weight: 700;
+  cursor: pointer; box-shadow: 0 4px 20px rgba(232,99,122,0.4);
+  transition: transform 0.2s;
+}
 .next-btn:active { transform: scale(0.95); }
 
-/* ===== PAGE 3 — POLAROID ===== */
-#page-planet { overflow: hidden; }
-
+/* ===== PAGE 4 — POLAROID ===== */
+#page-photo { overflow: hidden; }
 .polaroid-bg {
   width: 100%; height: 100%;
   background: linear-gradient(160deg, #fce4dc 0%, #f9c8c0 50%, #f2a8a0 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
 }
-
-/* floating hearts bg */
-.polaroid-bg::before {
-  content: '💕';
-  position: absolute;
-  font-size: 8rem;
-  opacity: 0.06;
-  top: 10%; left: -5%;
-  pointer-events: none;
-}
-.polaroid-bg::after {
-  content: '💕';
-  position: absolute;
-  font-size: 6rem;
-  opacity: 0.06;
-  bottom: 10%; right: -3%;
-  pointer-events: none;
-}
-
 .polaroid-title {
-  font-family: 'Dancing Script', cursive;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--rose);
-  margin-bottom: 6px;
-  text-align: center;
-  z-index: 5;
+  font-family: 'Dancing Script', cursive; font-size: 2rem; font-weight: 700;
+  color: var(--rose); margin-bottom: 6px; text-align: center; z-index: 5;
 }
-
 .polaroid-hint {
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: rgba(90,48,48,0.55);
-  margin-bottom: 32px;
-  text-align: center;
-  z-index: 5;
+  font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 500;
+  color: rgba(90,48,48,0.55); margin-bottom: 32px; text-align: center; z-index: 5;
 }
-
-.polaroid-stack {
-  position: relative;
-  width: 240px;
-  height: 280px;
-  z-index: 5;
-}
-
+.polaroid-stack { position: relative; width: 240px; height: 280px; z-index: 5; }
 .polaroid-card {
-  position: absolute;
-  inset: 0;
-  background: white;
-  border-radius: 4px;
+  position: absolute; inset: 0; background: white; border-radius: 4px;
   padding: 12px 12px 40px;
   box-shadow: 0 8px 32px rgba(180,80,80,0.18), 0 2px 8px rgba(0,0,0,0.1);
-  cursor: grab;
-  user-select: none;
-  transform-origin: center bottom;
-  transition: box-shadow 0.2s;
-  will-change: transform;
+  cursor: grab; user-select: none; transform-origin: center bottom; will-change: transform;
 }
 .polaroid-card:active { cursor: grabbing; }
 .polaroid-card img {
-  width: 100%; height: 216px;
-  object-fit: cover;
-  display: block;
-  border-radius: 2px;
-  pointer-events: none;
+  width: 100%; height: 216px; object-fit: cover;
+  display: block; border-radius: 2px; pointer-events: none;
 }
-.polaroid-card.flying-left {
-  animation: flyLeft 0.4s ease-in forwards;
-}
-.polaroid-card.flying-right {
-  animation: flyRight 0.4s ease-in forwards;
-}
-@keyframes flyLeft {
-  to { transform: translateX(-140vw) rotate(-30deg); opacity: 0; }
-}
-@keyframes flyRight {
-  to { transform: translateX(140vw) rotate(30deg); opacity: 0; }
-}
-
+.polaroid-card.flying-left { animation: flyLeft 0.4s ease-in forwards; }
+.polaroid-card.flying-right { animation: flyRight 0.4s ease-in forwards; }
+@keyframes flyLeft { to { transform: translateX(-140vw) rotate(-30deg); opacity: 0; } }
+@keyframes flyRight { to { transform: translateX(140vw) rotate(30deg); opacity: 0; } }
 .swipe-counter {
-  margin-top: 20px;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(90,48,48,0.5);
-  z-index: 5;
-}
-
-/* Lightbox */
-.lightbox {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(2,0,8,0.9);
-  z-index: 100;
-  align-items: center; justify-content: center;
-  backdrop-filter: blur(12px);
-}
-.lightbox.open { display: flex; }
-.lightbox-inner { max-width: 340px; width: 88%; position: relative; }
-.lightbox img {
-  width: 100%; border-radius: 16px;
-  border: 2px solid rgba(232,99,122,0.6);
-  box-shadow: 0 0 50px rgba(232,99,122,0.35);
-  display: block;
-}
-.lightbox-close {
-  position: absolute; top: -14px; right: -14px;
-  width: 34px; height: 34px; border-radius: 50%;
-  background: var(--rose); border: none; color: white;
-  font-size: 1rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Nunito', sans-serif; font-weight: 700;
+  margin-top: 20px; font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem; font-weight: 600; color: rgba(90,48,48,0.5); z-index: 5;
 }
 
 /* Hearts */
@@ -303,23 +175,50 @@ body {
   0%   { transform: translateY(0) rotate(0deg); opacity: 0.9; }
   100% { transform: translateY(-110vh) rotate(15deg); opacity: 0; }
 }
+
+/* Music btn */
+.music-btn {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(232,99,122,0.85);
+  border: none; color: white; font-size: 1.2rem;
+  cursor: pointer; z-index: 999;
+  display: none; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(232,99,122,0.4);
+  transition: transform 0.2s;
+}
+.music-btn.visible { display: flex; }
+.music-btn:active { transform: scale(0.9); }
 </style>
 </head>
 <body>
 
-<!-- PAGE 1: PIN -->
-<div class="page active" id="page-pin">
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="https://www.youtube.com/watch?v=0KSOMA3QBU0" type="audio/mpeg">
+</audio>
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+
+<!-- PAGE 1: QUESTION -->
+<div class="page active" id="page-question">
+  <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+  <div class="question-content">
+    <div class="question-text">"I have something 🤍"</div>
+    <button class="btn-yes" onclick="goToPin()">Yes! 💕</button>
+    <button class="btn-no" id="btnNo" onmouseover="runAway()" ontouchstart="runAway()">No</button>
+  </div>
+</div>
+
+<!-- PAGE 2: PIN -->
+<div class="page" id="page-pin">
   <div class="pin-top">
     <div class="small">I made this website just for u</div>
     <div class="name">"Ren"</div>
   </div>
   <div class="pin-dots">
-    <div class="pin-dot" id="d0"></div>
-    <div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div>
-    <div class="pin-dot" id="d3"></div>
-    <div class="pin-dot" id="d4"></div>
-    <div class="pin-dot" id="d5"></div>
+    <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
+    <div class="pin-dot" id="d4"></div><div class="pin-dot" id="d5"></div>
   </div>
   <div class="pin-keypad">
     <div class="key" onclick="pressKey('1')">1</div>
@@ -338,24 +237,22 @@ body {
   <div class="pin-error" id="pin-error">wrong pin 💔</div>
 </div>
 
-<!-- PAGE 2: LETTER -->
+<!-- PAGE 3: LETTER -->
 <div class="page" id="page-letter">
   <div class="letter-card">
-    <div class="letter-greeting">Hai Ren,</div>
+    <div class="letter-greeting">Hi Ren,</div>
     <div class="letter-body">
-      Aku cuma mau jujur sebentar.<br><br>
-      Kamu adalah pengalaman pertamaku merasakan punya seseorang yang bisa membuat hari-hari terasa berbeda.<br><br>
-      Aku nulis ini bukan untuk minta kamu kembali atau mengubah apa pun. Aku cuma ingin kamu tahu kalau kehilangan kamu bukan hal yang mudah buat aku. Kamu pernah jadi bagian dari keseharianku, dan sekarang aku masih belajar menjalani hari tanpa kehadiran kamu seperti dulu.<br><br>
-      Mungkin waktu akan membantu aku terbiasa dengan semuanya. Mungkin suatu hari nanti rasa ini nggak akan seberat sekarang. Tapi untuk saat ini, aku masih mencoba berdamai dengan kenyataan.<br><br>
-      Oh iya, kalau kamu pengen cerita — cerita aja, santai aja. Nomor WA dan sosmed mu nggak aku blokir, karena aku cuma lihat postingan ulangmu. 💕<br><br>
-      Dan jujur, Ren… <strong>BACK TO FRIENDS bisa gak ya</strong>
+      untuk baikmu, aku berterima kasih,<br>
+      untuk salahku, aku minta maaf,<br><br>
+      semoga kamu bertemu di titik terbaik,<br>
+      semua tentangmu perlahan ku hapus…….
     </div>
-    <button class="next-btn" onclick="goToPlanet()">Next? 💕</button>
+    <button class="next-btn" onclick="goToPhoto()">Next? 💕</button>
   </div>
 </div>
 
-<!-- PAGE 3: POLAROID -->
-<div class="page" id="page-planet">
+<!-- PAGE 4: POLAROID -->
+<div class="page" id="page-photo">
   <div class="polaroid-bg">
     <div class="polaroid-title">Our Memories 💕</div>
     <div class="polaroid-hint">Tarik &amp; lempar foto untuk melihat!</div>
@@ -363,18 +260,7 @@ body {
   </div>
 </div>
 
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-  <div class="lightbox-inner">
-    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-    <img id="lightbox-img" src="" alt="">
-  </div>
-</div>
-
 <script>
-// ============================================================
-// FOTO
-// ============================================================
 const photos = [
   'https://raw.githubusercontent.com/GlitchSYSX/backtifriends/main/01edf243-406e-4efb-89bb-866e46fd8fc8.jpeg',
   'https://raw.githubusercontent.com/GlitchSYSX/backtifriends/main/09c6e3b4-25ca-4cfd-8bc3-d99ab7f18464.jpeg',
@@ -409,6 +295,130 @@ const photos = [
 ];
 
 // ============================================================
+// CONFETTI
+// ============================================================
+const confCanvas = document.getElementById('confettiCanvas');
+const confCtx = confCanvas.getContext('2d');
+let confetti = [];
+let confRunning = true;
+
+function resizeConf() {
+  confCanvas.width = window.innerWidth;
+  confCanvas.height = window.innerHeight;
+}
+resizeConf();
+window.addEventListener('resize', resizeConf);
+
+const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff','#ff9a3c','#ff85a1'];
+for (let i = 0; i < 80; i++) {
+  confetti.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight - window.innerHeight,
+    w: 6 + Math.random() * 8, h: 4 + Math.random() * 6,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 4,
+    speed: 1.5 + Math.random() * 2.5, drift: (Math.random() - 0.5) * 1.5
+  });
+}
+
+function drawConfetti() {
+  if (!confRunning) return;
+  confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+  confetti.forEach(c => {
+    c.y += c.speed; c.x += c.drift; c.rot += c.rotSpeed;
+    if (c.y > confCanvas.height) { c.y = -10; c.x = Math.random() * confCanvas.width; }
+    confCtx.save();
+    confCtx.translate(c.x, c.y);
+    confCtx.rotate(c.rot * Math.PI / 180);
+    confCtx.fillStyle = c.color;
+    confCtx.fillRect(-c.w/2, -c.h/2, c.w, c.h);
+    confCtx.restore();
+  });
+  requestAnimationFrame(drawConfetti);
+}
+drawConfetti();
+
+// ============================================================
+// NO BUTTON RUN AWAY
+// ============================================================
+const btnNo = document.getElementById('btnNo');
+let noX = 50, noY = 80;
+
+function runAway() {
+  const vw = window.innerWidth - 120;
+  const vh = window.innerHeight - 80;
+  noX = 20 + Math.random() * vw;
+  noY = 20 + Math.random() * vh;
+  btnNo.style.left = noX + 'px';
+  btnNo.style.top = noY + 'px';
+}
+
+// init position
+btnNo.style.position = 'fixed';
+btnNo.style.left = '50%';
+btnNo.style.top = '25%';
+btnNo.style.transform = 'translateX(-50%)';
+
+// ============================================================
+// MUSIC
+// ============================================================
+// Using a royalty-free version via a public audio CDN
+// Replace src below with your own MP3 uploaded to GitHub
+const music = document.getElementById('bgMusic');
+// Try YouTube embed audio workaround via proxy
+music.src = 'https://raw.githubusercontent.com/GlitchSYSX/backtifriends/main/music.mp3';
+let musicPlaying = false;
+
+function toggleMusic() {
+  const btn = document.getElementById('musicBtn');
+  if (musicPlaying) {
+    music.pause();
+    btn.textContent = '🎵';
+    musicPlaying = false;
+  } else {
+    music.play().catch(() => {});
+    btn.textContent = '⏸';
+    musicPlaying = true;
+  }
+}
+
+function showMusicBtn() {
+  document.getElementById('musicBtn').classList.add('visible');
+  music.play().catch(() => {});
+  musicPlaying = true;
+  document.getElementById('musicBtn').textContent = '⏸';
+}
+
+// ============================================================
+// PAGE TRANSITIONS
+// ============================================================
+function goToPin() {
+  transition('page-question', 'page-pin');
+  confRunning = false;
+  showMusicBtn();
+  spawnHearts();
+}
+
+function goToLetter() {
+  transition('page-pin', 'page-letter');
+}
+
+function goToPhoto() {
+  transition('page-letter', 'page-photo');
+  initPolaroid();
+}
+
+function transition(fromId, toId) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  from.classList.add('fade-out');
+  setTimeout(() => {
+    from.classList.remove('active', 'fade-out');
+    to.classList.add('active');
+  }, 600);
+}
+
+// ============================================================
 // PIN
 // ============================================================
 const CORRECT_PIN = '210705';
@@ -420,18 +430,15 @@ function pressKey(num) {
   updateDots();
   if (currentPin.length === 6) setTimeout(checkPin, 200);
 }
-
 function clearPin() {
   currentPin = '';
   updateDots();
   document.getElementById('pin-error').classList.remove('show');
 }
-
 function updateDots() {
   for (let i = 0; i < 6; i++)
     document.getElementById('d' + i).classList.toggle('filled', i < currentPin.length);
 }
-
 function checkPin() {
   if (currentPin === CORRECT_PIN) {
     goToLetter();
@@ -441,28 +448,6 @@ function checkPin() {
     updateDots();
     setTimeout(() => document.getElementById('pin-error').classList.remove('show'), 1500);
   }
-}
-
-function goToLetter() {
-  const p1 = document.getElementById('page-pin');
-  const p2 = document.getElementById('page-letter');
-  p1.classList.add('fade-out');
-  setTimeout(() => {
-    p1.classList.remove('active', 'fade-out');
-    p2.classList.add('active');
-    spawnHearts();
-  }, 600);
-}
-
-function goToPlanet() {
-  const p2 = document.getElementById('page-letter');
-  const p3 = document.getElementById('page-planet');
-  p2.classList.add('fade-out');
-  setTimeout(() => {
-    p2.classList.remove('active', 'fade-out');
-    p3.classList.add('active');
-    initPolaroid();
-  }, 600);
 }
 
 // ============================================================
@@ -487,80 +472,48 @@ function spawnHearts() {
 }
 
 // ============================================================
-// POLAROID SWIPE
+// POLAROID
 // ============================================================
-let cards = [];
-let currentIdx = 0;
-let isDragging = false;
-let startX = 0, startY = 0, currentX = 0;
-let activeCard = null;
+let cards = [], currentIdx = 0;
+let isDragging = false, startX = 0, startY = 0, currentX = 0;
+let activeCard = null, dragMoved = false;
 
 function initPolaroid() {
   const stack = document.getElementById('polaroidStack');
-  stack.innerHTML = '';
-  cards = [];
-  currentIdx = 0;
-
-  // build cards in reverse so first photo is on top
+  stack.innerHTML = ''; cards = []; currentIdx = 0;
   [...photos].reverse().forEach((url, i) => {
-    const realIdx = photos.length - 1 - i;
     const card = document.createElement('div');
     card.className = 'polaroid-card';
-    card.dataset.idx = realIdx;
-
-    // slight random tilt for stack effect
     const tilt = (Math.random() - 0.5) * 6;
     const tx = (Math.random() - 0.5) * 8;
     card.style.transform = `rotate(${tilt}deg) translateX(${tx}px)`;
-    card.dataset.baseTilt = tilt;
-    card.dataset.baseTx = tx;
-
+    card.dataset.baseTilt = tilt; card.dataset.baseTx = tx;
     const img = document.createElement('img');
-    img.src = url;
-    img.crossOrigin = 'anonymous';
+    img.src = url; img.crossOrigin = 'anonymous';
     card.appendChild(img);
-
-    // drag events
     card.addEventListener('mousedown', dragStart);
     card.addEventListener('touchstart', dragStart, { passive: true });
-
     stack.appendChild(card);
-    cards.unshift(card); // first photo = cards[0] = top
+    cards.unshift(card);
   });
-
-  updateCounter();
-  refreshStackVisuals();
+  updateCounter(); refreshStackVisuals();
 }
 
 function refreshStackVisuals() {
   cards.slice(currentIdx).forEach((card, i) => {
+    const tilt = parseFloat(card.dataset.baseTilt) || 0;
+    const tx = parseFloat(card.dataset.baseTx) || 0;
     if (i === 0) {
-      // top card — keep current drag transform or reset
       if (!isDragging) {
-        const tilt = parseFloat(card.dataset.baseTilt) || 0;
-        const tx = parseFloat(card.dataset.baseTx) || 0;
         card.style.transform = `rotate(${tilt}deg) translateX(${tx}px)`;
         card.style.transition = 'transform 0.3s ease';
       }
-      card.style.zIndex = 50;
-      card.style.opacity = '1';
-    } else if (i === 1) {
-      const tilt = parseFloat(card.dataset.baseTilt) || 0;
-      const tx = parseFloat(card.dataset.baseTx) || 0;
-      card.style.transform = `rotate(${tilt + 3}deg) translateX(${tx + 4}px) scale(0.97)`;
-      card.style.zIndex = 49 - i;
-      card.style.opacity = '1';
-      card.style.transition = 'transform 0.3s ease';
-    } else if (i < 5) {
-      const tilt = parseFloat(card.dataset.baseTilt) || 0;
-      const tx = parseFloat(card.dataset.baseTx) || 0;
+      card.style.zIndex = 50; card.style.opacity = '1';
+    } else {
       card.style.transform = `rotate(${tilt + i*2}deg) translateX(${tx + i*3}px) scale(${1 - i*0.02})`;
       card.style.zIndex = 49 - i;
-      card.style.opacity = i < 4 ? '1' : '0.7';
+      card.style.opacity = i < 4 ? '1' : '0';
       card.style.transition = 'transform 0.3s ease';
-    } else {
-      card.style.zIndex = 1;
-      card.style.opacity = '0';
     }
   });
   updateCounter();
@@ -568,14 +521,10 @@ function refreshStackVisuals() {
 
 function dragStart(e) {
   if (currentIdx >= cards.length) return;
-  activeCard = cards[currentIdx];
-  isDragging = true;
-  const point = e.touches ? e.touches[0] : e;
-  startX = point.clientX;
-  startY = point.clientY;
-  currentX = 0;
+  activeCard = cards[currentIdx]; isDragging = true; dragMoved = false;
+  const pt = e.touches ? e.touches[0] : e;
+  startX = pt.clientX; startY = pt.clientY; currentX = 0;
   activeCard.style.transition = 'none';
-
   window.addEventListener('mousemove', dragMove);
   window.addEventListener('touchmove', dragMove, { passive: false });
   window.addEventListener('mouseup', dragEnd);
@@ -585,41 +534,32 @@ function dragStart(e) {
 function dragMove(e) {
   if (!isDragging || !activeCard) return;
   if (e.cancelable) e.preventDefault();
-  const point = e.touches ? e.touches[0] : e;
-  currentX = point.clientX - startX;
-  const currentY = point.clientY - startY;
+  const pt = e.touches ? e.touches[0] : e;
+  currentX = pt.clientX - startX;
+  const dy = pt.clientY - startY;
+  if (Math.abs(currentX) > 3 || Math.abs(dy) > 3) dragMoved = true;
   const rotate = currentX * 0.08;
   const baseTilt = parseFloat(activeCard.dataset.baseTilt) || 0;
-  activeCard.style.transform = `translateX(${currentX}px) translateY(${currentY * 0.3}px) rotate(${baseTilt + rotate}deg)`;
+  activeCard.style.transform = `translateX(${currentX}px) translateY(${dy * 0.3}px) rotate(${baseTilt + rotate}deg)`;
 }
 
-function dragEnd(e) {
+function dragEnd() {
   window.removeEventListener('mousemove', dragMove);
   window.removeEventListener('touchmove', dragMove);
   window.removeEventListener('mouseup', dragEnd);
   window.removeEventListener('touchend', dragEnd);
-
   if (!isDragging || !activeCard) return;
   isDragging = false;
-
-  const threshold = window.innerWidth * 0.3;
-
+  const threshold = window.innerWidth * 0.28;
   if (Math.abs(currentX) > threshold) {
-    // fly away
-    const dir = currentX > 0 ? 'flying-right' : 'flying-left';
-    activeCard.classList.add(dir);
+    activeCard.classList.add(currentX > 0 ? 'flying-right' : 'flying-left');
     setTimeout(() => {
       activeCard.style.display = 'none';
       currentIdx++;
-      if (currentIdx >= cards.length) {
-        // reset — show all again
-        setTimeout(resetStack, 400);
-      } else {
-        refreshStackVisuals();
-      }
+      if (currentIdx >= cards.length) setTimeout(resetStack, 400);
+      else refreshStackVisuals();
     }, 400);
   } else {
-    // snap back
     activeCard.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
     const tilt = parseFloat(activeCard.dataset.baseTilt) || 0;
     const tx = parseFloat(activeCard.dataset.baseTx) || 0;
@@ -630,32 +570,19 @@ function dragEnd(e) {
 
 function resetStack() {
   currentIdx = 0;
-  cards.forEach(c => {
-    c.style.display = '';
-    c.classList.remove('flying-left', 'flying-right');
-  });
+  cards.forEach(c => { c.style.display = ''; c.classList.remove('flying-left','flying-right'); });
   refreshStackVisuals();
 }
 
 function updateCounter() {
   let el = document.querySelector('.swipe-counter');
   if (!el) {
-    el = document.createElement('div');
-    el.className = 'swipe-counter';
+    el = document.createElement('div'); el.className = 'swipe-counter';
     document.querySelector('.polaroid-bg').appendChild(el);
   }
-  const remaining = Math.max(0, cards.length - currentIdx);
-  el.textContent = remaining > 0 ? `${remaining} foto tersisa` : 'semua udah dilihat 💕';
+  const rem = Math.max(0, cards.length - currentIdx);
+  el.textContent = rem > 0 ? `${rem} foto tersisa` : 'semua udah dilihat 💕';
 }
-
-// Lightbox
-function closeLightbox(e) {
-  if (!e || e.target === document.getElementById('lightbox'))
-    document.getElementById('lightbox').classList.remove('open');
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
-});
 </script>
 </body>
 </html>
