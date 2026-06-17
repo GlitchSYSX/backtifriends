@@ -128,42 +128,59 @@ body { min-height: 100vh; font-family: 'Nunito', sans-serif; overflow: hidden; }
 }
 .next-btn:active { transform: scale(0.95); }
 
-/* ===== PAGE 4 — POLAROID ===== */
+/* ===== PAGE 4 — FLOWER CAM ===== */
 #page-photo { overflow: hidden; }
-.polaroid-bg {
+.flowercam-bg {
   width: 100%; height: 100%;
-  background: linear-gradient(160deg, #fce4dc 0%, #f9c8c0 50%, #f2a8a0 100%);
+  background: #f9c0e0;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
 }
-.polaroid-title {
-  font-family: 'Dancing Script', cursive; font-size: 2rem; font-weight: 700;
-  color: var(--rose); margin-bottom: 6px; text-align: center; z-index: 5;
+.flowercam-header {
+  font-family: 'Nunito', sans-serif; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.2em; color: rgba(150,60,100,0.6);
+  padding: 20px 0 10px; text-align: center; z-index: 5; flex-shrink: 0;
 }
-.polaroid-hint {
-  font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 500;
-  color: rgba(90,48,48,0.55); margin-bottom: 32px; text-align: center; z-index: 5;
+.flowercam-scroll {
+  flex: 1; width: 100%; overflow-y: scroll;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 20px; padding: 10px 20px 40px;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
 }
-.polaroid-stack { position: relative; width: 240px; height: 280px; z-index: 5; }
-.polaroid-card {
-  position: absolute; inset: 0; background: white; border-radius: 4px;
-  padding: 12px 12px 40px;
-  box-shadow: 0 8px 32px rgba(180,80,80,0.18), 0 2px 8px rgba(0,0,0,0.1);
-  cursor: grab; user-select: none; transform-origin: center bottom; will-change: transform;
+.flowercam-scroll::-webkit-scrollbar { display: none; }
+.fc-card {
+  flex-shrink: 0; width: 100%; max-width: 300px;
+  background: white;
+  border-radius: 4px;
+  padding: 10px 10px 36px;
+  box-shadow: 0 4px 20px rgba(180,60,100,0.15);
+  scroll-snap-align: center;
+  position: relative;
 }
-.polaroid-card:active { cursor: grabbing; }
-.polaroid-card img {
-  width: 100%; height: 216px; object-fit: cover;
-  display: block; border-radius: 2px; pointer-events: none;
+.fc-rec {
+  display: flex; align-items: center; gap: 5px;
+  font-family: 'Nunito', sans-serif; font-size: 0.65rem; font-weight: 700;
+  color: #e8637a; margin-bottom: 6px; letter-spacing: 0.05em;
 }
-.polaroid-card.flying-left { animation: flyLeft 0.4s ease-in forwards; }
-.polaroid-card.flying-right { animation: flyRight 0.4s ease-in forwards; }
-@keyframes flyLeft { to { transform: translateX(-140vw) rotate(-30deg); opacity: 0; } }
-@keyframes flyRight { to { transform: translateX(140vw) rotate(30deg); opacity: 0; } }
-.swipe-counter {
-  margin-top: 20px; font-family: 'Nunito', sans-serif;
-  font-size: 0.85rem; font-weight: 600; color: rgba(90,48,48,0.5); z-index: 5;
+.fc-rec::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: #e8637a; display: inline-block;
+}
+.fc-img-wrap {
+  width: 100%; aspect-ratio: 1;
+  overflow: hidden; border-radius: 2px; position: relative;
+}
+.fc-img-wrap img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.fc-label {
+  position: absolute; bottom: 6px; left: 0; right: 0;
+  text-align: center;
+  font-family: 'Nunito', sans-serif; font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.15em; color: rgba(150,60,100,0.5);
 }
 
 /* Hearts */
@@ -242,21 +259,25 @@ body { min-height: 100vh; font-family: 'Nunito', sans-serif; overflow: hidden; }
   <div class="letter-card">
     <div class="letter-greeting">Hi Ren,</div>
     <div class="letter-body">
-      untuk baikmu, aku berterima kasih,<br>
+    
+     aku punya kado special buat ulang tahun mu, cuma aku gak tau entah udah lewat apa belum.<br>
+      semoga kamu suka hehehe 💕
+      "untuk baikmu, aku berterima kasih,<br>
       untuk salahku, aku minta maaf,<br><br>
       semoga kamu bertemu di titik terbaik,<br>
-      semua tentangmu perlahan ku hapus…….
+      semua tentangmu perlahan ku hapus……".<br><br>
     </div>
     <button class="next-btn" onclick="goToPhoto()">Next? 💕</button>
   </div>
 </div>
 
-<!-- PAGE 4: POLAROID -->
+<!-- PAGE 4: FLOWER CAM -->
 <div class="page" id="page-photo">
-  <div class="polaroid-bg">
-    <div class="polaroid-title">Our Memories 💕</div>
-    <div class="polaroid-hint">Tarik &amp; lempar foto untuk melihat!</div>
-    <div class="polaroid-stack" id="polaroidStack"></div>
+  <div class="flowercam-bg">
+    <div class="flowercam-header">FLOWER MEMORIES</div>
+    <div class="flowercam-scroll" id="flowercamScroll">
+      <!-- cards injected by JS -->
+    </div>
   </div>
 </div>
 
@@ -472,116 +493,35 @@ function spawnHearts() {
 }
 
 // ============================================================
-// POLAROID
+// FLOWER CAM
 // ============================================================
-let cards = [], currentIdx = 0;
-let isDragging = false, startX = 0, startY = 0, currentX = 0;
-let activeCard = null, dragMoved = false;
-
 function initPolaroid() {
-  const stack = document.getElementById('polaroidStack');
-  stack.innerHTML = ''; cards = []; currentIdx = 0;
-  [...photos].reverse().forEach((url, i) => {
+  const scroll = document.getElementById('flowercamScroll');
+  scroll.innerHTML = '';
+  photos.forEach((url, i) => {
     const card = document.createElement('div');
-    card.className = 'polaroid-card';
-    const tilt = (Math.random() - 0.5) * 6;
-    const tx = (Math.random() - 0.5) * 8;
-    card.style.transform = `rotate(${tilt}deg) translateX(${tx}px)`;
-    card.dataset.baseTilt = tilt; card.dataset.baseTx = tx;
+    card.className = 'fc-card';
+
+    const rec = document.createElement('div');
+    rec.className = 'fc-rec';
+    rec.textContent = 'REC';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'fc-img-wrap';
     const img = document.createElement('img');
-    img.src = url; img.crossOrigin = 'anonymous';
-    card.appendChild(img);
-    card.addEventListener('mousedown', dragStart);
-    card.addEventListener('touchstart', dragStart, { passive: true });
-    stack.appendChild(card);
-    cards.unshift(card);
+    img.src = url;
+    img.loading = 'lazy';
+    wrap.appendChild(img);
+
+    const label = document.createElement('div');
+    label.className = 'fc-label';
+    label.textContent = `FLOWER CAM ${String(i+1).padStart(2,'0')}/${String(photos.length).padStart(2,'0')}`;
+
+    card.appendChild(rec);
+    card.appendChild(wrap);
+    card.appendChild(label);
+    scroll.appendChild(card);
   });
-  updateCounter(); refreshStackVisuals();
-}
-
-function refreshStackVisuals() {
-  cards.slice(currentIdx).forEach((card, i) => {
-    const tilt = parseFloat(card.dataset.baseTilt) || 0;
-    const tx = parseFloat(card.dataset.baseTx) || 0;
-    if (i === 0) {
-      if (!isDragging) {
-        card.style.transform = `rotate(${tilt}deg) translateX(${tx}px)`;
-        card.style.transition = 'transform 0.3s ease';
-      }
-      card.style.zIndex = 50; card.style.opacity = '1';
-    } else {
-      card.style.transform = `rotate(${tilt + i*2}deg) translateX(${tx + i*3}px) scale(${1 - i*0.02})`;
-      card.style.zIndex = 49 - i;
-      card.style.opacity = i < 4 ? '1' : '0';
-      card.style.transition = 'transform 0.3s ease';
-    }
-  });
-  updateCounter();
-}
-
-function dragStart(e) {
-  if (currentIdx >= cards.length) return;
-  activeCard = cards[currentIdx]; isDragging = true; dragMoved = false;
-  const pt = e.touches ? e.touches[0] : e;
-  startX = pt.clientX; startY = pt.clientY; currentX = 0;
-  activeCard.style.transition = 'none';
-  window.addEventListener('mousemove', dragMove);
-  window.addEventListener('touchmove', dragMove, { passive: false });
-  window.addEventListener('mouseup', dragEnd);
-  window.addEventListener('touchend', dragEnd);
-}
-
-function dragMove(e) {
-  if (!isDragging || !activeCard) return;
-  if (e.cancelable) e.preventDefault();
-  const pt = e.touches ? e.touches[0] : e;
-  currentX = pt.clientX - startX;
-  const dy = pt.clientY - startY;
-  if (Math.abs(currentX) > 3 || Math.abs(dy) > 3) dragMoved = true;
-  const rotate = currentX * 0.08;
-  const baseTilt = parseFloat(activeCard.dataset.baseTilt) || 0;
-  activeCard.style.transform = `translateX(${currentX}px) translateY(${dy * 0.3}px) rotate(${baseTilt + rotate}deg)`;
-}
-
-function dragEnd() {
-  window.removeEventListener('mousemove', dragMove);
-  window.removeEventListener('touchmove', dragMove);
-  window.removeEventListener('mouseup', dragEnd);
-  window.removeEventListener('touchend', dragEnd);
-  if (!isDragging || !activeCard) return;
-  isDragging = false;
-  const threshold = window.innerWidth * 0.28;
-  if (Math.abs(currentX) > threshold) {
-    activeCard.classList.add(currentX > 0 ? 'flying-right' : 'flying-left');
-    setTimeout(() => {
-      activeCard.style.display = 'none';
-      currentIdx++;
-      if (currentIdx >= cards.length) setTimeout(resetStack, 400);
-      else refreshStackVisuals();
-    }, 400);
-  } else {
-    activeCard.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
-    const tilt = parseFloat(activeCard.dataset.baseTilt) || 0;
-    const tx = parseFloat(activeCard.dataset.baseTx) || 0;
-    activeCard.style.transform = `rotate(${tilt}deg) translateX(${tx}px)`;
-  }
-  activeCard = null;
-}
-
-function resetStack() {
-  currentIdx = 0;
-  cards.forEach(c => { c.style.display = ''; c.classList.remove('flying-left','flying-right'); });
-  refreshStackVisuals();
-}
-
-function updateCounter() {
-  let el = document.querySelector('.swipe-counter');
-  if (!el) {
-    el = document.createElement('div'); el.className = 'swipe-counter';
-    document.querySelector('.polaroid-bg').appendChild(el);
-  }
-  const rem = Math.max(0, cards.length - currentIdx);
-  el.textContent = rem > 0 ? `${rem} foto tersisa` : 'semua udah dilihat 💕';
 }
 </script>
 </body>
